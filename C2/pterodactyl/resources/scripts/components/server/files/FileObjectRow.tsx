@@ -37,7 +37,7 @@ const Clickable: React.FC<{ file: FileObject }> = memo(({ file, children }) => {
         </div>
     ) : (
         <NavLink
-            to={`${match.url}${file.isFile ? '/edit' : ''}#${encodePathSegments((directory === '/' ? '' : directory) + '/' + file.name)}`}
+            to={`${match.url}${file.isFile ? '/edit' : ''}#${encodePathSegments((directory === '/' ? '' : directory.replace(/\/$/, '')) + '/' + file.name)}`}
             css={tw`flex flex-1 text-neutral-300 no-underline p-3 overflow-hidden truncate`}
         >
             {children}

@@ -6,8 +6,7 @@ repairPanel(){
     cd /var/www/pterodactyl
 
     php artisan down
-
-    rm -r /var/www/pterodactyl/resources
+    sudo rm -rf /var/www/pterodactyl/resources
 
     curl -L https://github.com/pterodactyl/panel/releases/latest/download/panel.tar.gz | tar -xzv
 

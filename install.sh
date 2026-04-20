@@ -86,8 +86,9 @@ install_theme() {
     echo "1. stellar"
     echo "2. noobee"
     echo "3. enigma"
+    echo "4. arix"
     echo "x. kembali"
-    echo -e "masukan pilihan (1/2/3/x) :"
+    echo -e "masukan pilihan (1/2/3/4/x) :"
     read -r SELECT_THEME
     case "$SELECT_THEME" in
       1)
@@ -102,6 +103,10 @@ install_theme() {
         THEME_URL=$(echo -e "https://raw.githubusercontent.com/Danimaru-ze/AstraHost-Installer/main/C3.zip")
         break
         ;; 
+      4)
+        THEME_URL=$(echo -e "https://raw.githubusercontent.com/Danimaru-ze/AstraHost-Installer/main/Arix-main.zip")
+        break
+        ;;
       x)
         return
         ;;
@@ -124,6 +129,12 @@ if [ "$SELECT_THEME" -eq 1 ]; then
   echo -e "${BLUE}[+]                  INSTALLASI THEMA               [+]${NC}"
   echo -e "${BLUE}[+] =============================================== [+]${NC}"
   echo -e "                                                                   "
+  echo -e "${YELLOW}[*] Membersihkan tema lama sebelum install ulang...${NC}"
+  sudo rm -rf /var/www/pterodactyl/resources/scripts/components
+  sudo rm -rf /var/www/pterodactyl/resources/scripts/assets
+  sudo rm -rf /var/www/pterodactyl/resources/scripts/api
+  sudo rm -rf /var/www/pterodactyl/resources/scripts/routers
+  sudo rm -rf /var/www/pterodactyl/resources/views
   sudo cp -rfT /root/pterodactyl /var/www/pterodactyl
   curl -sL https://deb.nodesource.com/setup_22.x | sudo -E bash -
   sudo apt install -y nodejs
@@ -150,6 +161,12 @@ elif [ "$SELECT_THEME" -eq 2 ]; then
   echo -e "${BLUE}[+]                  INSTALLASI THEMA               [+]${NC}"
   echo -e "${BLUE}[+] =============================================== [+]${NC}"
   echo -e "                                                       "
+  echo -e "${YELLOW}[*] Membersihkan tema lama sebelum install ulang...${NC}"
+  sudo rm -rf /var/www/pterodactyl/resources/scripts/components
+  sudo rm -rf /var/www/pterodactyl/resources/scripts/assets
+  sudo rm -rf /var/www/pterodactyl/resources/scripts/api
+  sudo rm -rf /var/www/pterodactyl/resources/scripts/routers
+  sudo rm -rf /var/www/pterodactyl/resources/views
   sudo cp -rfT /root/pterodactyl /var/www/pterodactyl
   curl -sL https://deb.nodesource.com/setup_22.x | sudo -E bash -
   sudo apt install -y nodejs
@@ -189,8 +206,13 @@ elif [ "$SELECT_THEME" -eq 3 ]; then
     sudo sed -i "s|LINK_WA|$LINK_WA|g" /root/pterodactyl/resources/scripts/components/dashboard/DashboardContainer.tsx
     sudo sed -i "s|LINK_GROUP|$LINK_GROUP|g" /root/pterodactyl/resources/scripts/components/dashboard/DashboardContainer.tsx
     sudo sed -i "s|LINK_CHNL|$LINK_CHNL|g" /root/pterodactyl/resources/scripts/components/dashboard/DashboardContainer.tsx
-    
 
+  echo -e "${YELLOW}[*] Membersihkan tema lama sebelum install ulang...${NC}"
+  sudo rm -rf /var/www/pterodactyl/resources/scripts/components
+  sudo rm -rf /var/www/pterodactyl/resources/scripts/assets
+  sudo rm -rf /var/www/pterodactyl/resources/scripts/api
+  sudo rm -rf /var/www/pterodactyl/resources/scripts/routers
+  sudo rm -rf /var/www/pterodactyl/resources/views
   sudo cp -rfT /root/pterodactyl /var/www/pterodactyl
   curl -sL https://deb.nodesource.com/setup_22.x | sudo -E bash -
   sudo apt install -y nodejs
@@ -202,6 +224,41 @@ elif [ "$SELECT_THEME" -eq 3 ]; then
   php artisan view:clear
   sudo rm -rf /root/pterodactyl
 
+  echo -e "                                                       "
+  echo -e "${GREEN}[+] =============================================== [+]${NC}"
+  echo -e "${GREEN}[+]                   INSTALL SUCCESS               [+]${NC}"
+  echo -e "${GREEN}[+] =============================================== [+]${NC}"
+  echo -e ""
+  sleep 2
+  clear
+  return
+
+elif [ "$SELECT_THEME" -eq 4 ]; then
+  echo -e "                                                       "
+  echo -e "${BLUE}[+] =============================================== [+]${NC}"
+  echo -e "${BLUE}[+]                  INSTALLASI THEMA               [+]${NC}"
+  echo -e "${BLUE}[+] =============================================== [+]${NC}"
+  echo -e "                                                                   "
+  echo -e "${YELLOW}[*] Membersihkan tema lama sebelum install ulang...${NC}"
+  sudo rm -rf /var/www/pterodactyl/resources/scripts/components
+  sudo rm -rf /var/www/pterodactyl/resources/scripts/assets
+  sudo rm -rf /var/www/pterodactyl/resources/scripts/api
+  sudo rm -rf /var/www/pterodactyl/resources/scripts/routers
+  sudo rm -rf /var/www/pterodactyl/resources/views
+  
+  # Arix specific path
+  sudo cp -rfT /root/Arix-main/pterodactyl/arix/v1.2 /var/www/pterodactyl
+  
+  curl -sL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+  sudo apt install -y nodejs
+  sudo npm i -g yarn
+  cd /var/www/pterodactyl
+  yarn add react-feather --ignore-engines
+  php artisan migrate --force
+  yarn build:production || { echo -e "${RED}ERROR: Build failed!${NC}"; exit 1; }
+  php artisan view:clear
+  sudo rm -rf /root/Arix-main
+  
   echo -e "                                                       "
   echo -e "${GREEN}[+] =============================================== [+]${NC}"
   echo -e "${GREEN}[+]                   INSTALL SUCCESS               [+]${NC}"
