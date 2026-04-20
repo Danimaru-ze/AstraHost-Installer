@@ -129,7 +129,7 @@ if [ "$SELECT_THEME" -eq 1 ]; then
   cd /var/www/pterodactyl
   yarn add react-feather --ignore-engines
   php artisan migrate
-  yarn build:production --ignore-engines
+  yarn build:production
   php artisan view:clear
   sudo rm /root/C2.zip
   sudo rm -rf /root/pterodactyl
@@ -156,7 +156,7 @@ elif [ "$SELECT_THEME" -eq 2 ]; then
   cd /var/www/pterodactyl
   yarn add react-feather --ignore-engines
   php artisan migrate
-  yarn build:production --ignore-engines
+  yarn build:production
   php artisan view:clear
   sudo rm /root/C1.zip
   sudo rm -rf /root/pterodactyl
@@ -198,7 +198,7 @@ elif [ "$SELECT_THEME" -eq 3 ]; then
   cd /var/www/pterodactyl
   yarn add react-feather --ignore-engines
   php artisan migrate
-  yarn build:production --ignore-engines
+  yarn build:production
   php artisan view:clear
   sudo rm /root/C3.zip
   sudo rm -rf /root/pterodactyl
@@ -223,7 +223,7 @@ uninstall_theme() {
   echo -e "${BLUE}[+]                    DELETE THEME                 [+]${NC}"
   echo -e "${BLUE}[+] =============================================== [+]${NC}"
   echo -e "                                                       "
-  bash <(curl -s https://raw.githubusercontent.com/Danimaru-ze/AstraHost-Installer/main/repair.sh)
+  export REPAIR_AUTO=true; bash <(curl -s https://raw.githubusercontent.com/Danimaru-ze/AstraHost-Installer/main/repair.sh)
   echo -e "                                                       "
   echo -e "${GREEN}[+] =============================================== [+]${NC}"
   echo -e "${GREEN}[+]                 DELETE THEME SUKSES             [+]${NC}"
@@ -259,7 +259,7 @@ sudo npm i -g yarn
 cd /var/www/pterodactyl
 yarn add react-feather --ignore-engines
 php artisan migrate
-yarn build:production --ignore-engines
+yarn build:production
 php artisan view:clear
 
 # Hapus file dan direktori sementara
