@@ -278,16 +278,18 @@ elif [ "$SELECT_THEME" -eq 4 ]; then
   # Arix specific path - Corrected for the zip structure (unzips to /root/pterodactyl)
   sudo cp -rfT /root/pterodactyl /var/www/pterodactyl
   
-  # === HOTFIX ERROR 500 (SANCTUM) ===
-  echo -e "${YELLOW}[*] Menjalankan Hotfix Error 500 (Sanctum)...${NC}"
-  sudo sed -i 's/Sanctum::ignoreMigrations();//g' /var/www/pterodactyl/app/Providers/AuthServiceProvider.php
+  # === NUCLEAR HOTFIX ERROR 500 (SANCTUM) ===
+  echo -e "${YELLOW}[*] Menjalankan Nuclear Hotfix Error 500 (Global Search & Destroy)...${NC}"
+  # Cari di semua file di folder app/ dan hapus baris yang bermasalah (termasuk variasi spasi)
+  sudo grep -rl "Sanctum::ignoreMigrations" /var/www/pterodactyl/app/ | xargs sudo sed -i 's/Sanctum::ignoreMigrations()[[:space:]]*;//g' || true
 
-  # === HOTFIX BUILD (WEBPACK PATH) ===
-  echo -e "${YELLOW}[*] Menjalankan Hotfix Build (Webpack Polyfill)...${NC}"
+  # === NUCLEAR HOTFIX BUILD (WEBPACK PATH) ===
+  echo -e "${YELLOW}[*] Menjalankan Nuclear Hotfix Build (Robust Webpack Polyfill)...${NC}"
   if [ -f "webpack.config.js" ]; then
-    # Add path-browserify fallback to webpack.config.js if not present
+    # Jika path-browserify belum ada di config
     if ! grep -q "path-browserify" webpack.config.js; then
-      sudo sed -i "s/alias: {/fallback: { path: require.resolve('path-browserify') }, alias: {/g" webpack.config.js
+      # Sisipkan fallback path di dalam block resolve
+      sudo sed -i "/extensions: \[/i \        fallback: { path: require.resolve('path-browserify') }," webpack.config.js
     fi
   fi
   
