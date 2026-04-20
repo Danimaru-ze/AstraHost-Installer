@@ -240,24 +240,22 @@ elif [ "$SELECT_THEME" -eq 4 ]; then
   echo -e "${BLUE}[+] =============================================== [+]${NC}"
   echo -e "                                                                   "
   
-  echo -e "${YELLOW}[*] Menyiapkan environment & dependensi Arix...${NC}"
+  echo -e "${YELLOW}[*] Melakukan Pemulihan Core Pterodactyl v1.11.10...${NC}"
   cd /var/www/pterodactyl
   
-  # Self-healing: Restore core files if they were accidentally deleted
-  if [ ! -f "resources/scripts/api/http.ts" ]; then
-    echo -e "${YELLOW}[!] Mendeteksi file inti hilang, merestore basis Pterodactyl...${NC}"
-    curl -s "https://raw.githubusercontent.com/pterodactyl/panel/v1.11.10/resources/scripts/index.tsx" -o resources/scripts/index.tsx
-    # Restore minimal API for build success if missing
-    mkdir -p resources/scripts/api
-    curl -s "https://raw.githubusercontent.com/pterodactyl/panel/v1.11.10/resources/scripts/api/http.ts" -o resources/scripts/api/http.ts
-  fi
+  # Total Core Recovery: Restore resources & app folders from official source
+  mkdir -p /root/ptero_core
+  curl -L https://github.com/pterodactyl/panel/releases/download/v1.11.10/panel.tar.gz | tar -xzv -C /root/ptero_core
+  sudo cp -rfT /root/ptero_core/resources /var/www/pterodactyl/resources
+  sudo cp -rfT /root/ptero_core/app /var/www/pterodactyl/app
+  sudo rm -rf /root/ptero_core
 
   # Install Arix required dependencies
   echo -e "${YELLOW}[*] Menginstall NPM packages tambahan (Arix Dependencies)...${NC}"
-  yarn add react-icons bbcode-to-react i18next-browser-languagedetector path-browserify @tailwindcss/line-clamp @tailwindcss/forms --ignore-engines
+  yarn add react-icons bbcode-to-react i18next-browser-languagedetector path-browserify @tailwindcss/line-clamp @tailwindcss/forms md5 --ignore-engines
 
   echo -e "${YELLOW}[*] Menimpa file tema Arix (Smart Merge)...${NC}"
-  # Arix specific path - USING OVERLAY (NOT RM ALL)
+  # Arix specific path - USING OVERLAY
   sudo cp -rfT /root/Arix-main/pterodactyl/arix/v1.2 /var/www/pterodactyl
   
   php artisan migrate --force
