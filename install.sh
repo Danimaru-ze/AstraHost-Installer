@@ -270,18 +270,31 @@ elif [ "$SELECT_THEME" -eq 4 ]; then
   
   cd /var/www/pterodactyl
 
-  # Install Arix required dependencies
+  # Install Arix required dependencies (MUST BE BEFORE BUILD)
   echo -e "${YELLOW}[*] Menginstall NPM packages tambahan (Arix Dependencies)...${NC}"
   yarn add react-icons bbcode-to-react i18next-browser-languagedetector path-browserify @tailwindcss/line-clamp @tailwindcss/forms md5 --ignore-engines
 
   echo -e "${YELLOW}[*] Menimpa file tema Arix v1.2 (Smart Merge)...${NC}"
-  # Arix specific path - USING NEW arix-v1.2 STRUCTURE
-  sudo cp -rfT /root/arix-v1.2/pterodactyl/arix/v1.2 /var/www/pterodactyl
+  # Arix specific path - Corrected for the zip structure (unzips to /root/pterodactyl)
+  sudo cp -rfT /root/pterodactyl /var/www/pterodactyl
+  
+  # === HOTFIX ERROR 500 (SANCTUM) ===
+  echo -e "${YELLOW}[*] Menjalankan Hotfix Error 500 (Sanctum)...${NC}"
+  sudo sed -i 's/Sanctum::ignoreMigrations();//g' /var/www/pterodactyl/app/Providers/AuthServiceProvider.php
+
+  # === HOTFIX BUILD (WEBPACK PATH) ===
+  echo -e "${YELLOW}[*] Menjalankan Hotfix Build (Webpack Polyfill)...${NC}"
+  if [ -f "webpack.config.js" ]; then
+    # Add path-browserify fallback to webpack.config.js if not present
+    if ! grep -q "path-browserify" webpack.config.js; then
+      sudo sed -i "s/alias: {/fallback: { path: require.resolve('path-browserify') }, alias: {/g" webpack.config.js
+    fi
+  fi
   
   php artisan migrate --force
   yarn build:production || { echo -e "${RED}ERROR: Build failed!${NC}"; exit 1; }
   php artisan view:clear
-  sudo rm -rf /root/arix-v1.2
+  sudo rm -rf /root/pterodactyl
   
   echo -e "                                                       "
   echo -e "${GREEN}[+] =============================================== [+]${NC}"
