@@ -74,6 +74,25 @@ check_token() {
   clear
 }
 
+# Restore base Pterodactyl files to fix missing modules
+restore_base() {
+  echo -e "${YELLOW}[*] Menjalankan sistem pemulihan core (Health Check)...${NC}"
+  cd /var/www/pterodactyl
+  
+  # Total Core Recovery: Restore resources & app folders from official source
+  mkdir -p /root/ptero_core
+  if curl -L https://github.com/pterodactyl/panel/releases/download/v1.11.10/panel.tar.gz | tar -xzv -C /root/ptero_core; then
+    echo -e "${YELLOW}[*] Menyinkronkan file sistem asli...${NC}"
+    sudo cp -rfT /root/ptero_core/resources /var/www/pterodactyl/resources
+    sudo cp -rfT /root/ptero_core/app /var/www/pterodactyl/app
+    sudo rm -rf /root/ptero_core
+    echo -e "${GREEN}[+] Sistem core berhasil dipulihkan.${NC}"
+  else
+    echo -e "${RED}[!] Gagal mendownload file pemulihan. Pastikan koneksi internet VPS stabil.${NC}"
+    exit 1
+  fi
+}
+
 # Install theme
 install_theme() {
   while true; do
@@ -93,18 +112,23 @@ install_theme() {
     case "$SELECT_THEME" in
       1)
         THEME_URL=$(echo -e "https://raw.githubusercontent.com/Danimaru-ze/AstraHost-Installer/main/C2.zip")
+        THEME_FOLDER="pterodactyl"
         break
         ;;
       2)
         THEME_URL=$(echo -e "https://raw.githubusercontent.com/Danimaru-ze/AstraHost-Installer/main/C1.zip")
+        THEME_FOLDER="pterodactyl"
         break
         ;;
       3)
         THEME_URL=$(echo -e "https://raw.githubusercontent.com/Danimaru-ze/AstraHost-Installer/main/C3.zip")
+        THEME_FOLDER="pterodactyl"
         break
         ;; 
       4)
-        THEME_URL=$(echo -e "https://raw.githubusercontent.com/Danimaru-ze/AstraHost-Installer/main/Arix-main.zip")
+        # Using Arix v1.2 from GitHub or local if possible
+        THEME_URL=$(echo -e "https://raw.githubusercontent.com/Danimaru-ze/AstraHost-Installer/main/arix-v1.2.zip")
+        THEME_FOLDER="arix-v1.2/pterodactyl/arix/v1.2"
         break
         ;;
       x)
@@ -116,12 +140,16 @@ install_theme() {
     esac
   done
   
-if [ -e /root/pterodactyl ]; then
-    sudo rm -rf /root/pterodactyl
+  if [ -e /root/$THEME_FOLDER ]; then
+    sudo rm -rf /root/$THEME_FOLDER
   fi
   wget -qO theme.zip "$THEME_URL"
   sudo unzip -o theme.zip -d /root
   rm theme.zip
+  
+  # Run global healing before installation
+  restore_base
+
   
 if [ "$SELECT_THEME" -eq 1 ]; then
   echo -e "                                                       "
@@ -140,7 +168,7 @@ if [ "$SELECT_THEME" -eq 1 ]; then
   sudo apt install -y nodejs
   sudo npm i -g yarn
   cd /var/www/pterodactyl
-  yarn add react-feather --ignore-engines
+  yarn add react-feather md5 --ignore-engines
   php artisan migrate
   yarn build:production || { echo -e "${RED}ERROR: Build failed!${NC}"; exit 1; }
   php artisan view:clear
@@ -240,28 +268,20 @@ elif [ "$SELECT_THEME" -eq 4 ]; then
   echo -e "${BLUE}[+] =============================================== [+]${NC}"
   echo -e "                                                                   "
   
-  echo -e "${YELLOW}[*] Melakukan Pemulihan Core Pterodactyl v1.11.10...${NC}"
   cd /var/www/pterodactyl
-  
-  # Total Core Recovery: Restore resources & app folders from official source
-  mkdir -p /root/ptero_core
-  curl -L https://github.com/pterodactyl/panel/releases/download/v1.11.10/panel.tar.gz | tar -xzv -C /root/ptero_core
-  sudo cp -rfT /root/ptero_core/resources /var/www/pterodactyl/resources
-  sudo cp -rfT /root/ptero_core/app /var/www/pterodactyl/app
-  sudo rm -rf /root/ptero_core
 
   # Install Arix required dependencies
   echo -e "${YELLOW}[*] Menginstall NPM packages tambahan (Arix Dependencies)...${NC}"
   yarn add react-icons bbcode-to-react i18next-browser-languagedetector path-browserify @tailwindcss/line-clamp @tailwindcss/forms md5 --ignore-engines
 
-  echo -e "${YELLOW}[*] Menimpa file tema Arix (Smart Merge)...${NC}"
-  # Arix specific path - USING OVERLAY
-  sudo cp -rfT /root/Arix-main/pterodactyl/arix/v1.2 /var/www/pterodactyl
+  echo -e "${YELLOW}[*] Menimpa file tema Arix v1.2 (Smart Merge)...${NC}"
+  # Arix specific path - USING NEW arix-v1.2 STRUCTURE
+  sudo cp -rfT /root/arix-v1.2/pterodactyl/arix/v1.2 /var/www/pterodactyl
   
   php artisan migrate --force
   yarn build:production || { echo -e "${RED}ERROR: Build failed!${NC}"; exit 1; }
   php artisan view:clear
-  sudo rm -rf /root/Arix-main
+  sudo rm -rf /root/arix-v1.2
   
   echo -e "                                                       "
   echo -e "${GREEN}[+] =============================================== [+]${NC}"
