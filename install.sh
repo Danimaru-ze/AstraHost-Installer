@@ -1,5 +1,5 @@
 #!/bin/bash
-# Version: 2.1 (Force Cache Refresh)
+# Version: 2.2 (Force Cache Refresh)
 
 # Color
 BLUE='\033[0;34m'       
@@ -229,7 +229,6 @@ uninstall_theme() {
   echo -e "                                                       "
   sleep 2
   clear
-}
 }
 create_node() {
   echo -e "                                                       "
