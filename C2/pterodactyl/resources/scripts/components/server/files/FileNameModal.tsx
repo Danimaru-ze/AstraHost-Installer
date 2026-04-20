@@ -4,7 +4,6 @@ import { Form, Formik, FormikHelpers } from 'formik';
 import { object, string } from 'yup';
 import Field from '@/components/elements/Field';
 import { ServerContext } from '@/state/server';
-import { join } from 'path';
 import tw from 'twin.macro';
 import Button from '@/components/elements/Button';
 
@@ -20,7 +19,7 @@ export default ({ onFileNamed, onDismissed, ...props }: Props) => {
     const directory = ServerContext.useStoreState((state) => state.files.directory);
 
     const submit = (values: Values, { setSubmitting }: FormikHelpers<Values>) => {
-        onFileNamed(join(directory, values.fileName));
+        onFileNamed((directory === '/' ? '' : directory) + '/' + values.fileName);
         setSubmitting(false);
     };
 

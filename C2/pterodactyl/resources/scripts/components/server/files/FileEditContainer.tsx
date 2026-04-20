@@ -18,7 +18,6 @@ import useFlash from '@/plugins/useFlash';
 import { ServerContext } from '@/state/server';
 import ErrorBoundary from '@/components/elements/ErrorBoundary';
 import { encodePathSegments, hashToPath } from '@/helpers';
-import { dirname } from 'path';
 import CodemirrorEditor from '@/components/elements/CodemirrorEditor';
 import styled from 'styled-components/macro';
 import { Save_content, Create_file } from '@/lang';
@@ -60,7 +59,7 @@ export default () => {
         setError('');
         setLoading(true);
         const path = hashToPath(hash);
-        setDirectory(dirname(path));
+        setDirectory(path.split('/').slice(0, -1).join('/') || '/');
         getFileContents(uuid, path)
             .then(setContent)
             .catch((error) => {

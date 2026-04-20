@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import { ServerContext } from '@/state/server';
 import { Form, Formik, FormikHelpers } from 'formik';
 import Field from '@/components/elements/Field';
-import { join } from 'path';
 import { object, string } from 'yup';
 import createDirectory from '@/api/server/files/createDirectory';
 import tw from 'twin.macro';
@@ -78,7 +77,7 @@ const NewDirectoryDialog = asDialog({
                             <Code>
                                 /home/container/
                                 <span css={tw`text-cyan-200`}>
-                                    {join(directory, values.directoryName).replace(/^(\.\.\/|\/)+/, '')}
+                                    {((directory === '/' ? '' : directory) + '/' + values.directoryName).replace(/^(\.\.\/|\/)+/, '')}
                                 </span>
                             </Code>
                         </p>

@@ -14,7 +14,6 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import RenameFileModal from '@/components/server/files/RenameFileModal';
 import { ServerContext } from '@/state/server';
-import { join } from 'path';
 import deleteFiles from '@/api/server/files/deleteFiles';
 import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
 import copyFile from '@/api/server/files/copyFile';
@@ -88,7 +87,7 @@ const FileDropdownMenu = ({ file }: { file: FileObject }) => {
         setShowSpinner(true);
         clearFlashes('files');
 
-        copyFile(uuid, join(directory, file.name))
+        copyFile(uuid, (directory === '/' ? '' : directory) + '/' + file.name)
             .then(() => mutate())
             .catch((error) => clearAndAddHttpError({ key: 'files', error }))
             .then(() => setShowSpinner(false));
@@ -98,7 +97,7 @@ const FileDropdownMenu = ({ file }: { file: FileObject }) => {
         setShowSpinner(true);
         clearFlashes('files');
 
-        getFileDownloadUrl(uuid, join(directory, file.name))
+        getFileDownloadUrl(uuid, (directory === '/' ? '' : directory) + '/' + file.name)
             .then((url) => {
                 // @ts-expect-error this is valid
                 window.location = url;

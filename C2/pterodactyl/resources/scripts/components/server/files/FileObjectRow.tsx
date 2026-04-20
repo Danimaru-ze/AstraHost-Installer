@@ -12,7 +12,6 @@ import isEqual from 'react-fast-compare';
 import styled from 'styled-components/macro';
 import SelectFileCheckbox from '@/components/server/files/SelectFileCheckbox';
 import { usePermissions } from '@/plugins/usePermissions';
-import { join } from 'path';
 import { bytesToString } from '@/lib/formatters';
 
 const Row = styled.div`
@@ -38,7 +37,7 @@ const Clickable: React.FC<{ file: FileObject }> = memo(({ file, children }) => {
         </div>
     ) : (
         <NavLink
-            to={`${match.url}${file.isFile ? '/edit' : ''}#${encodePathSegments(join(directory, file.name))}`}
+            to={`${match.url}${file.isFile ? '/edit' : ''}#${encodePathSegments((directory === '/' ? '' : directory) + '/' + file.name)}`}
             css={tw`flex flex-1 text-neutral-300 no-underline p-3 overflow-hidden truncate`}
         >
             {children}

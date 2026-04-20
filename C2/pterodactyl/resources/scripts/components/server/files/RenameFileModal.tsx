@@ -2,7 +2,6 @@ import React from 'react';
 import Modal, { RequiredModalProps } from '@/components/elements/Modal';
 import { Form, Formik, FormikHelpers } from 'formik';
 import Field from '@/components/elements/Field';
-import { join } from 'path';
 import renameFiles from '@/api/server/files/renameFiles';
 import { ServerContext } from '@/state/server';
 import tw from 'twin.macro';
@@ -40,7 +39,7 @@ const RenameFileModal = ({ files, useMoveTerminology, ...props }: OwnProps) => {
 
         let data;
         if (useMoveTerminology && files.length > 1) {
-            data = files.map((f) => ({ from: f, to: join(name, f) }));
+            data = files.map((f) => ({ from: f, to: ((name === '/' ? '' : name) + '/' + f) }));
         } else {
             data = files.map((f) => ({ from: f, to: name }));
         }
@@ -83,7 +82,7 @@ const RenameFileModal = ({ files, useMoveTerminology, ...props }: OwnProps) => {
                         {useMoveTerminology && (
                             <p css={tw`text-xs mt-2 text-neutral-400`}>
                                 <strong css={tw`text-neutral-200`}>{New_location}:</strong>
-                                &nbsp;/home/container/{join(directory, values.name).replace(/^(\.\.\/|\/)+/, '')}
+                                &nbsp;/home/container/{((directory === '/' ? '' : directory) + '/' + values.name).replace(/^(\.\.\/|\/)+/, '')}
                             </p>
                         )}
                     </Form>
