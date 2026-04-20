@@ -239,21 +239,27 @@ elif [ "$SELECT_THEME" -eq 4 ]; then
   echo -e "${BLUE}[+]                  INSTALLASI THEMA               [+]${NC}"
   echo -e "${BLUE}[+] =============================================== [+]${NC}"
   echo -e "                                                                   "
-  echo -e "${YELLOW}[*] Membersihkan tema lama sebelum install ulang...${NC}"
-  sudo rm -rf /var/www/pterodactyl/resources/scripts/components
-  sudo rm -rf /var/www/pterodactyl/resources/scripts/assets
-  sudo rm -rf /var/www/pterodactyl/resources/scripts/api
-  sudo rm -rf /var/www/pterodactyl/resources/scripts/routers
-  sudo rm -rf /var/www/pterodactyl/resources/views
   
-  # Arix specific path
+  echo -e "${YELLOW}[*] Menyiapkan environment & dependensi Arix...${NC}"
+  cd /var/www/pterodactyl
+  
+  # Self-healing: Restore core files if they were accidentally deleted
+  if [ ! -f "resources/scripts/api/http.ts" ]; then
+    echo -e "${YELLOW}[!] Mendeteksi file inti hilang, merestore basis Pterodactyl...${NC}"
+    curl -s "https://raw.githubusercontent.com/pterodactyl/panel/v1.11.10/resources/scripts/index.tsx" -o resources/scripts/index.tsx
+    # Restore minimal API for build success if missing
+    mkdir -p resources/scripts/api
+    curl -s "https://raw.githubusercontent.com/pterodactyl/panel/v1.11.10/resources/scripts/api/http.ts" -o resources/scripts/api/http.ts
+  fi
+
+  # Install Arix required dependencies
+  echo -e "${YELLOW}[*] Menginstall NPM packages tambahan (Arix Dependencies)...${NC}"
+  yarn add react-icons bbcode-to-react i18next-browser-languagedetector path-browserify @tailwindcss/line-clamp @tailwindcss/forms --ignore-engines
+
+  echo -e "${YELLOW}[*] Menimpa file tema Arix (Smart Merge)...${NC}"
+  # Arix specific path - USING OVERLAY (NOT RM ALL)
   sudo cp -rfT /root/Arix-main/pterodactyl/arix/v1.2 /var/www/pterodactyl
   
-  curl -sL https://deb.nodesource.com/setup_22.x | sudo -E bash -
-  sudo apt install -y nodejs
-  sudo npm i -g yarn
-  cd /var/www/pterodactyl
-  yarn add react-feather --ignore-engines
   php artisan migrate --force
   yarn build:production || { echo -e "${RED}ERROR: Build failed!${NC}"; exit 1; }
   php artisan view:clear
