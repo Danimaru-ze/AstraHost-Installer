@@ -180,8 +180,11 @@ if [ "$SELECT_THEME" -eq 1 ]; then
   echo -e "${GREEN}[+] =============================================== [+]${NC}"
   echo -e ""
   sleep 2
+  if [ "$REPAIR_AUTO" = "true" ]; then
+    exit 0
+  fi
   clear
-  exit 0
+  return
 
 elif [ "$SELECT_THEME" -eq 2 ]; then
   echo -e "                                                       "
@@ -212,6 +215,9 @@ elif [ "$SELECT_THEME" -eq 2 ]; then
   echo -e "${GREEN}[+] =============================================== [+]${NC}"
   echo -e "                                                       "
   sleep 2
+  if [ "$REPAIR_AUTO" = "true" ]; then
+    exit 0
+  fi
   clear
   return
 
@@ -258,6 +264,9 @@ elif [ "$SELECT_THEME" -eq 3 ]; then
   echo -e "${GREEN}[+] =============================================== [+]${NC}"
   echo -e ""
   sleep 2
+  if [ "$REPAIR_AUTO" = "true" ]; then
+    exit 0
+  fi
   clear
   return
 
@@ -304,6 +313,9 @@ elif [ "$SELECT_THEME" -eq 4 ]; then
   echo -e "${GREEN}[+] =============================================== [+]${NC}"
   echo -e ""
   sleep 2
+  if [ "$REPAIR_AUTO" = "true" ]; then
+    exit 0
+  fi
   clear
   return
 fi
