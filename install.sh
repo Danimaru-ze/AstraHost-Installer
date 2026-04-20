@@ -210,11 +210,6 @@ elif [ "$SELECT_THEME" -eq 3 ]; then
   clear
   return
 fi
-  sleep 5
-else
-  echo ""
-  echo "Pilihan tidak valid. silahkan pilih 1/2/3."
-fi
 }
 
 
