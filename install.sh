@@ -170,21 +170,22 @@ if [ "$SELECT_THEME" -eq 1 ]; then
   echo -e "${BLUE}[+] =============================================== [+]${NC}"
   echo -e "                                                                   "
   echo -e "${YELLOW}[*] Membersihkan tema lama sebelum install ulang...${NC}"
-  sudo rm -rf /var/www/pterodactyl/resources/scripts/components
-  sudo rm -rf /var/www/pterodactyl/resources/scripts/assets
-  sudo rm -rf /var/www/pterodactyl/resources/scripts/api
-  sudo rm -rf /var/www/pterodactyl/resources/scripts/routers
-  sudo rm -rf /var/www/pterodactyl/resources/views
-  sudo cp -rfT /root/pterodactyl /var/www/pterodactyl
-  curl -sL https://deb.nodesource.com/setup_22.x | sudo -E bash -
-  sudo apt install -y nodejs
-  sudo npm i -g yarn
+  sudo rm -rf /var/www/pterodactyl/resources/scripts/components < /dev/null
+  sudo rm -rf /var/www/pterodactyl/resources/scripts/assets < /dev/null
+  sudo rm -rf /var/www/pterodactyl/resources/scripts/api < /dev/null
+  sudo rm -rf /var/www/pterodactyl/resources/scripts/routers < /dev/null
+  sudo rm -rf /var/www/pterodactyl/resources/views < /dev/null
+  sudo cp -rfT /root/pterodactyl /var/www/pterodactyl < /dev/null
+  curl -sL https://deb.nodesource.com/setup_22.x < /dev/null | sudo -E bash - < /dev/null
+  sudo apt install -y nodejs < /dev/null
+  sudo npm i -g yarn < /dev/null
   cd /var/www/pterodactyl
-  yarn add react-feather md5 --ignore-engines
-  php artisan migrate
-  yarn build:production || { echo -e "${RED}ERROR: Build failed!${NC}"; exit 1; }
-  php artisan view:clear
-  sudo rm -rf /root/pterodactyl
+  yarn install --ignore-engines < /dev/null
+  yarn add react-feather md5 --ignore-engines < /dev/null
+  php artisan migrate < /dev/null
+  yarn build:production < /dev/null || { echo -e "${RED}ERROR: Build failed!${NC}"; exit 1; }
+  php artisan view:clear < /dev/null
+  sudo rm -rf /root/pterodactyl < /dev/null
 
   echo -e "                                                       "
   echo -e "${GREEN}[+] =============================================== [+]${NC}"
@@ -205,21 +206,22 @@ elif [ "$SELECT_THEME" -eq 2 ]; then
   echo -e "${BLUE}[+] =============================================== [+]${NC}"
   echo -e "                                                       "
   echo -e "${YELLOW}[*] Membersihkan tema lama sebelum install ulang...${NC}"
-  sudo rm -rf /var/www/pterodactyl/resources/scripts/components
-  sudo rm -rf /var/www/pterodactyl/resources/scripts/assets
-  sudo rm -rf /var/www/pterodactyl/resources/scripts/api
-  sudo rm -rf /var/www/pterodactyl/resources/scripts/routers
-  sudo rm -rf /var/www/pterodactyl/resources/views
-  sudo cp -rfT /root/pterodactyl /var/www/pterodactyl
-  curl -sL https://deb.nodesource.com/setup_22.x | sudo -E bash -
-  sudo apt install -y nodejs
-  npm i -g yarn
+  sudo rm -rf /var/www/pterodactyl/resources/scripts/components < /dev/null
+  sudo rm -rf /var/www/pterodactyl/resources/scripts/assets < /dev/null
+  sudo rm -rf /var/www/pterodactyl/resources/scripts/api < /dev/null
+  sudo rm -rf /var/www/pterodactyl/resources/scripts/routers < /dev/null
+  sudo rm -rf /var/www/pterodactyl/resources/views < /dev/null
+  sudo cp -rfT /root/pterodactyl /var/www/pterodactyl < /dev/null
+  curl -sL https://deb.nodesource.com/setup_22.x < /dev/null | sudo -E bash - < /dev/null
+  sudo apt install -y nodejs < /dev/null
+  npm i -g yarn < /dev/null
   cd /var/www/pterodactyl
-  yarn add react-feather --ignore-engines
-  php artisan migrate
-  yarn build:production || { echo -e "${RED}ERROR: Build failed!${NC}"; exit 1; }
-  php artisan view:clear
-  sudo rm -rf /root/pterodactyl
+  yarn install --ignore-engines < /dev/null
+  yarn add react-feather --ignore-engines < /dev/null
+  php artisan migrate < /dev/null
+  yarn build:production < /dev/null || { echo -e "${RED}ERROR: Build failed!${NC}"; exit 1; }
+  php artisan view:clear < /dev/null
+  sudo rm -rf /root/pterodactyl < /dev/null
 
   echo -e "                                                       "
   echo -e "${GREEN}[+] =============================================== [+]${NC}"
