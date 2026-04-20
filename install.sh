@@ -1,4 +1,5 @@
 #!/bin/bash
+# Version: 2.1 (Force Cache Refresh)
 
 # Color
 BLUE='\033[0;34m'       
