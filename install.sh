@@ -113,8 +113,9 @@ install_theme() {
 if [ -e /root/pterodactyl ]; then
     sudo rm -rf /root/pterodactyl
   fi
-  wget -q "$THEME_URL"
-  sudo unzip -o "$(basename "$THEME_URL")"
+  wget -qO theme.zip "$THEME_URL"
+  sudo unzip -o theme.zip -d /root
+  rm theme.zip
   
 if [ "$SELECT_THEME" -eq 1 ]; then
   echo -e "                                                       "
@@ -129,9 +130,8 @@ if [ "$SELECT_THEME" -eq 1 ]; then
   cd /var/www/pterodactyl
   yarn add react-feather --ignore-engines
   php artisan migrate
-  yarn build:production
+  yarn build:production || { echo -e "${RED}ERROR: Build failed!${NC}"; exit 1; }
   php artisan view:clear
-  sudo rm /root/C2.zip
   sudo rm -rf /root/pterodactyl
 
   echo -e "                                                       "
@@ -156,9 +156,8 @@ elif [ "$SELECT_THEME" -eq 2 ]; then
   cd /var/www/pterodactyl
   yarn add react-feather --ignore-engines
   php artisan migrate
-  yarn build:production
+  yarn build:production || { echo -e "${RED}ERROR: Build failed!${NC}"; exit 1; }
   php artisan view:clear
-  sudo rm /root/C1.zip
   sudo rm -rf /root/pterodactyl
 
   echo -e "                                                       "
@@ -198,9 +197,8 @@ elif [ "$SELECT_THEME" -eq 3 ]; then
   cd /var/www/pterodactyl
   yarn add react-feather --ignore-engines
   php artisan migrate
-  yarn build:production
+  yarn build:production || { echo -e "${RED}ERROR: Build failed!${NC}"; exit 1; }
   php artisan view:clear
-  sudo rm /root/C3.zip
   sudo rm -rf /root/pterodactyl
 
   echo -e "                                                       "
@@ -208,6 +206,10 @@ elif [ "$SELECT_THEME" -eq 3 ]; then
   echo -e "${GREEN}[+]                   INSTALL SUCCESS               [+]${NC}"
   echo -e "${GREEN}[+] =============================================== [+]${NC}"
   echo -e ""
+  sleep 2
+  clear
+  return
+fi
   sleep 5
 else
   echo ""
@@ -232,49 +234,6 @@ uninstall_theme() {
   sleep 2
   clear
 }
-install_themeSteeler() {
-#!/bin/bash
-
-echo -e "                                                       "
-echo -e "${BLUE}[+] =============================================== [+]${NC}"
-echo -e "${BLUE}[+]                  INSTALLASI THEMA               [+]${NC}"
-echo -e "${BLUE}[+] =============================================== [+]${NC}"
-echo -e "                                                                   "
-
-# Unduh file tema
-wget -O /root/C2.zip https://raw.githubusercontent.com/Danimaru-ze/AstraHost-Installer/main/C2.zip
-
-# Ekstrak file tema
-unzip /root/C2.zip -d /root/pterodactyl
-
-# Salin tema ke direktori Pterodactyl
-sudo cp -rfT /root/pterodactyl /var/www/pterodactyl
-
-# Instal Node.js dan Yarn
-curl -sL https://deb.nodesource.com/setup_22.x | sudo -E bash -
-sudo apt install -y nodejs
-sudo npm i -g yarn
-
-# Instal dependensi dan build tema
-cd /var/www/pterodactyl
-yarn add react-feather --ignore-engines
-php artisan migrate
-yarn build:production
-php artisan view:clear
-
-# Hapus file dan direktori sementara
-sudo rm /root/C2.zip
-sudo rm -rf /root/pterodactyl
-
-echo -e "                                                       "
-echo -e "${GREEN}[+] =============================================== [+]${NC}"
-echo -e "${GREEN}[+]                   INSTALL SUCCESS               [+]${NC}"
-echo -e "${GREEN}[+] =============================================== [+]${NC}"
-echo -e ""
-sleep 2
-clear
-exit 0
-
 }
 create_node() {
   echo -e "                                                       "
