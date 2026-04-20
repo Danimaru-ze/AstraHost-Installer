@@ -36,7 +36,7 @@ install_jq() {
   echo -e "${BLUE}[+]             UPDATE & INSTALL JQ                 [+]${NC}"
   echo -e "${BLUE}[+] =============================================== [+]${NC}"
   echo -e "                                                       "
-  sudo apt update && sudo apt install -y jq
+  sudo apt update < /dev/null && sudo apt install -y jq < /dev/null
   if [ $? -eq 0 ]; then
     echo -e "                                                       "
     echo -e "${GREEN}[+] =============================================== [+]${NC}"
@@ -81,7 +81,7 @@ restore_base() {
   
   # Total Core Recovery: Restore resources & app folders from official source
   mkdir -p /root/ptero_core
-  if curl -L https://github.com/pterodactyl/panel/releases/download/v1.11.10/panel.tar.gz | tar -xzv -C /root/ptero_core; then
+  if curl -L https://github.com/pterodactyl/panel/releases/download/v1.11.10/panel.tar.gz < /dev/null | tar -xzv -C /root/ptero_core < /dev/null; then
     echo -e "${YELLOW}[*] Menyinkronkan file sistem asli...${NC}"
     sudo cp -rfT /root/ptero_core/resources /var/www/pterodactyl/resources
     sudo cp -rfT /root/ptero_core/app /var/www/pterodactyl/app
@@ -143,9 +143,9 @@ install_theme() {
   if [ -e /root/$THEME_FOLDER ]; then
     sudo rm -rf /root/$THEME_FOLDER
   fi
-  wget -qO theme.zip "$THEME_URL"
-  sudo unzip -o theme.zip -d /root
-  rm theme.zip
+  wget -qO theme.zip "$THEME_URL" < /dev/null
+  sudo unzip -o theme.zip -d /root < /dev/null
+  rm theme.zip < /dev/null
   
   # Run global healing before installation
   restore_base
@@ -281,7 +281,7 @@ elif [ "$SELECT_THEME" -eq 4 ]; then
 
   # Install Arix required dependencies (MUST BE BEFORE BUILD)
   echo -e "${YELLOW}[*] Menginstall NPM packages tambahan (Arix Dependencies)...${NC}"
-  yarn add react-icons bbcode-to-react i18next-browser-languagedetector path-browserify @tailwindcss/line-clamp @tailwindcss/forms md5 --ignore-engines
+  yarn add react-icons bbcode-to-react i18next-browser-languagedetector path-browserify @tailwindcss/line-clamp @tailwindcss/forms md5 --ignore-engines < /dev/null
 
   echo -e "${YELLOW}[*] Menimpa file tema Arix v1.2 (Smart Merge)...${NC}"
   # Arix specific path - Corrected for the zip structure (unzips to /root/pterodactyl)
@@ -302,9 +302,9 @@ elif [ "$SELECT_THEME" -eq 4 ]; then
     fi
   fi
   
-  php artisan migrate --force
-  yarn build:production || { echo -e "${RED}ERROR: Build failed!${NC}"; exit 1; }
-  php artisan view:clear
+  php artisan migrate --force < /dev/null
+  yarn build:production < /dev/null || { echo -e "${RED}ERROR: Build failed!${NC}"; exit 1; }
+  php artisan view:clear < /dev/null
   sudo rm -rf /root/pterodactyl
   
   echo -e "                                                       "
@@ -534,7 +534,13 @@ while true; do
   echo "8. Ubah Pw Vps"
   echo "x. Exit"
   echo -e "Masukkan pilihan 1/2/x:"
+  MENU_CHOICE=""
   read -r MENU_CHOICE
+  # Jika input kosong dan sedang mode REPAIR_AUTO, anggap input bermasalah dan keluar
+  if [ -z "$MENU_CHOICE" ] && [ "$REPAIR_AUTO" = "true" ]; then
+    echo -e "${RED}ERROR: Input tidak terbaca. Terminal mungkin memakan stdin.${NC}"
+    exit 1
+  fi
   clear
 
   case "$MENU_CHOICE" in
