@@ -80,26 +80,44 @@ restore_base() {
   
   # Cek sisa disk (Minimum 500MB)
   FREE_DISK=$(df -m / | awk 'NR==2 {print $4}')
+  # Cek sisa Inodes (Minimum 1000)
+  FREE_INODE=$(df -i / | awk 'NR==2 {print $4}')
+
   if [ "$FREE_DISK" -lt 500 ]; then
-    echo -e "${RED}[!] Gagal: Sisa penyimpanan VPS tinggal ${FREE_DISK}MB. Minimal butuh 500MB untuk pemulihan.${NC}"
-    echo -e "${YELLOW}[TIP] Silahkan hapus file sampah atau backup lama di VPS Boss dulu.${NC}"
+    echo -e "${RED}[!] Gagal: Sisa penyimpanan VPS tinggal ${FREE_DISK}MB. Minimal butuh 500MB.${NC}"
+    exit 1
+  fi
+
+  if [ "$FREE_INODE" -lt 1000 ]; then
+    echo -e "${RED}[!] Gagal: Sisa Inodes VPS tinggal ${FREE_INODE}. Hapus file-file kecil yang tidak berguna.${NC}"
     exit 1
   fi
 
   cd /var/www/pterodactyl < /dev/null
   
-  # Total Core Recovery: Restore resources & app folders from official source
+  # Total Core Recovery: Download physical file first for stability
   mkdir -p /root/ptero_core < /dev/null
-  echo -e "${YELLOW}[*] Mengunduh core Pterodactyl v1.11.10...${NC}"
-  if curl -L --retry 3 --connect-timeout 20 https://github.com/pterodactyl/panel/releases/download/v1.11.10/panel.tar.gz < /dev/null | tar -xzv -C /root/ptero_core < /dev/null; then
-    echo -e "${YELLOW}[*] Menyinkronkan file sistem asli...${NC}"
-    sudo cp -rfT /root/ptero_core/resources /var/www/pterodactyl/resources < /dev/null
-    sudo cp -rfT /root/ptero_core/app /var/www/pterodactyl/app < /dev/null
-    sudo rm -rf /root/ptero_core < /dev/null
-    echo -e "${GREEN}[+] Sistem core berhasil dipulihkan.${NC}"
+  echo -e "${YELLOW}[*] Mengunduh core Pterodactyl v1.11.10 (Metode Stabil)...${NC}"
+  
+  # Download physical file
+  rm -f /root/panel.tar.gz < /dev/null
+  if wget -qO /root/panel.tar.gz https://github.com/pterodactyl/panel/releases/download/v1.11.10/panel.tar.gz < /dev/null; then
+    echo -e "${YELLOW}[*] Mengekstrak file core...${NC}"
+    if tar -xzvf /root/panel.tar.gz -C /root/ptero_core < /dev/null; then
+      echo -e "${YELLOW}[*] Menyinkronkan file sistem asli...${NC}"
+      sudo cp -rfT /root/ptero_core/resources /var/www/pterodactyl/resources < /dev/null
+      sudo cp -rfT /root/ptero_core/app /var/www/pterodactyl/app < /dev/null
+      sudo rm -rf /root/ptero_core < /dev/null
+      sudo rm -f /root/panel.tar.gz < /dev/null
+      echo -e "${GREEN}[+] Sistem core berhasil dipulihkan.${NC}"
+    else
+      echo -e "${RED}[!] Gagal mengekstrak file core. Mungkin file download korup.${NC}"
+      rm -f /root/panel.tar.gz < /dev/null
+      exit 1
+    fi
   else
-    echo -e "${RED}[!] Gagal mendownload/mengekstrak file pemulihan.${NC}"
-    echo -e "${YELLOW}[TIP] Masalah ini biasanya karena internet VPS tidak stabil atau disk penuh.${NC}"
+    echo -e "${RED}[!] Gagal mengunduh file pemulihan via wget.${NC}"
+    echo -e "${YELLOW}[TIP] Pastikan VPS Boss bisa akses GitHub.${NC}"
     exit 1
   fi
 }
