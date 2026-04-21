@@ -176,13 +176,14 @@ if [ "$SELECT_THEME" -eq 1 ]; then
   sudo rm -rf /var/www/pterodactyl/resources/scripts/routers < /dev/null
   sudo rm -rf /var/www/pterodactyl/resources/views < /dev/null
   sudo cp -rfT /root/pterodactyl /var/www/pterodactyl < /dev/null
-  curl -sL https://deb.nodesource.com/setup_22.x < /dev/null | sudo -E bash - < /dev/null
+  curl -sL https://deb.nodesource.com/setup_18.x < /dev/null | sudo -E bash - < /dev/null
   sudo apt install -y nodejs < /dev/null
   sudo npm i -g yarn < /dev/null
   cd /var/www/pterodactyl
   yarn install --ignore-engines < /dev/null
   yarn add react-feather md5 --ignore-engines < /dev/null
   php artisan migrate < /dev/null
+  export NODE_OPTIONS=--max-old-space-size=4096
   yarn build:production < /dev/null || { echo -e "${RED}ERROR: Build failed!${NC}"; exit 1; }
   php artisan view:clear < /dev/null
   sudo rm -rf /root/pterodactyl < /dev/null
@@ -212,13 +213,14 @@ elif [ "$SELECT_THEME" -eq 2 ]; then
   sudo rm -rf /var/www/pterodactyl/resources/scripts/routers < /dev/null
   sudo rm -rf /var/www/pterodactyl/resources/views < /dev/null
   sudo cp -rfT /root/pterodactyl /var/www/pterodactyl < /dev/null
-  curl -sL https://deb.nodesource.com/setup_22.x < /dev/null | sudo -E bash - < /dev/null
+  curl -sL https://deb.nodesource.com/setup_18.x < /dev/null | sudo -E bash - < /dev/null
   sudo apt install -y nodejs < /dev/null
   npm i -g yarn < /dev/null
   cd /var/www/pterodactyl
   yarn install --ignore-engines < /dev/null
   yarn add react-feather --ignore-engines < /dev/null
   php artisan migrate < /dev/null
+  export NODE_OPTIONS=--max-old-space-size=4096
   yarn build:production < /dev/null || { echo -e "${RED}ERROR: Build failed!${NC}"; exit 1; }
   php artisan view:clear < /dev/null
   sudo rm -rf /root/pterodactyl < /dev/null
@@ -262,15 +264,17 @@ elif [ "$SELECT_THEME" -eq 3 ]; then
   sudo rm -rf /var/www/pterodactyl/resources/scripts/routers
   sudo rm -rf /var/www/pterodactyl/resources/views
   sudo cp -rfT /root/pterodactyl /var/www/pterodactyl
-  curl -sL https://deb.nodesource.com/setup_22.x | sudo -E bash -
-  sudo apt install -y nodejs
-  sudo npm i -g yarn
+  curl -sL https://deb.nodesource.com/setup_18.x < /dev/null | sudo -E bash - < /dev/null
+  sudo apt install -y nodejs < /dev/null
+  sudo npm i -g yarn < /dev/null
   cd /var/www/pterodactyl
-  yarn add react-feather --ignore-engines
-  php artisan migrate
-  yarn build:production || { echo -e "${RED}ERROR: Build failed!${NC}"; exit 1; }
-  php artisan view:clear
-  sudo rm -rf /root/pterodactyl
+  yarn install --ignore-engines < /dev/null
+  yarn add react-feather --ignore-engines < /dev/null
+  php artisan migrate < /dev/null
+  export NODE_OPTIONS=--max-old-space-size=4096
+  yarn build:production < /dev/null || { echo -e "${RED}ERROR: Build failed!${NC}"; exit 1; }
+  php artisan view:clear < /dev/null
+  sudo rm -rf /root/pterodactyl < /dev/null
 
   echo -e "                                                       "
   echo -e "${GREEN}[+] =============================================== [+]${NC}"
@@ -291,13 +295,17 @@ elif [ "$SELECT_THEME" -eq 4 ]; then
   echo -e "${BLUE}[+] =============================================== [+]${NC}"
   echo -e "                                                                   "
   
-  # === Arix: Jalankan core recovery dulu ===
+  # === Arix: Jalankan core recovery dan Node setup ===
   restore_base
+  curl -sL https://deb.nodesource.com/setup_18.x < /dev/null | sudo -E bash - < /dev/null
+  sudo apt install -y nodejs < /dev/null
+  sudo npm i -g yarn < /dev/null
 
   cd /var/www/pterodactyl
 
   # Install Arix required dependencies (MUST BE BEFORE BUILD)
   echo -e "${YELLOW}[*] Menginstall NPM packages tambahan (Arix Dependencies)...${NC}"
+  yarn install --ignore-engines < /dev/null
   yarn add react-icons bbcode-to-react i18next-browser-languagedetector path-browserify @tailwindcss/line-clamp @tailwindcss/forms md5 --ignore-engines < /dev/null
 
   echo -e "${YELLOW}[*] Menimpa file tema Arix v1.2 (Smart Merge)...${NC}"
@@ -320,6 +328,7 @@ elif [ "$SELECT_THEME" -eq 4 ]; then
   fi
   
   php artisan migrate --force < /dev/null
+  export NODE_OPTIONS=--max-old-space-size=4096
   yarn build:production < /dev/null || { echo -e "${RED}ERROR: Build failed!${NC}"; exit 1; }
   php artisan view:clear < /dev/null
   sudo rm -rf /root/pterodactyl
