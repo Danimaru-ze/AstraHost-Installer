@@ -11,6 +11,15 @@ repairPanel(){
     sudo apt-get update -y < /dev/null
     sudo apt-get install -y php$PHP_VER-bcmath php$PHP_VER-xml php$PHP_VER-mbstring php$PHP_VER-gd php$PHP_VER-curl php$PHP_VER-zip < /dev/null
 
+    # === Dependency Check & Version Sync (Node 18 Protection) ===
+    echo -e "\e[33m[*] Menyeimbangkan dependensi sistem (Nuclear Node Fix)...\e[0m"
+    sudo rm -f /etc/apt/sources.list.d/nodesource* < /dev/null
+    sudo apt-get clean < /dev/null
+    sudo apt-get update < /dev/null
+    sudo apt-get purge -y nodejs < /dev/null
+    curl -sL https://deb.nodesource.com/setup_18.x < /dev/null | sudo -E bash - < /dev/null
+    sudo apt install -y nodejs < /dev/null
+
     cd /var/www/pterodactyl
 
     php artisan down

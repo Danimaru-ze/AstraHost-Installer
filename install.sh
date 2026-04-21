@@ -175,9 +175,11 @@ if [ "$SELECT_THEME" -eq 1 ]; then
   PHP_VER=$(php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;")
   sudo apt-get install -y php$PHP_VER-bcmath php$PHP_VER-xml php$PHP_VER-mbstring php$PHP_VER-gd php$PHP_VER-curl php$PHP_VER-zip < /dev/null
   
-  # Clean Node Swap (Forced)
-  echo -e "${YELLOW}[*] Menghapus Node lama (Forced Purge) untuk menghindari konflik...\e[0m"
-  sudo rm -f /etc/apt/sources.list.d/nodesource.list < /dev/null
+  # Clean Node Swap (Nuclear Purge)
+  echo -e "${YELLOW}[*] Menghapus Node lama (Nuclear Purge) untuk menghindari konflik...\e[0m"
+  sudo rm -f /etc/apt/sources.list.d/nodesource* < /dev/null
+  sudo apt-get clean < /dev/null
+  sudo apt-get update < /dev/null
   sudo apt-get purge -y nodejs < /dev/null
   curl -sL https://deb.nodesource.com/setup_18.x < /dev/null | sudo -E bash - < /dev/null
   sudo apt install -y nodejs < /dev/null
@@ -194,7 +196,7 @@ if [ "$SELECT_THEME" -eq 1 ]; then
   rm -rf node_modules yarn.lock < /dev/null
   
   yarn install --ignore-engines < /dev/null
-  yarn add react-feather md5 --ignore-engines < /dev/null
+  yarn add react-feather md5 path-browserify --ignore-engines < /dev/null
   php artisan migrate < /dev/null
   export NODE_OPTIONS=--max-old-space-size=4096
   yarn build:production < /dev/null || { echo -e "${RED}ERROR: Build failed!${NC}"; exit 1; }
@@ -225,9 +227,11 @@ elif [ "$SELECT_THEME" -eq 2 ]; then
   PHP_VER=$(php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;")
   sudo apt-get install -y php$PHP_VER-bcmath php$PHP_VER-xml php$PHP_VER-mbstring php$PHP_VER-gd php$PHP_VER-curl php$PHP_VER-zip < /dev/null
   
-  # Clean Node Swap (Forced)
-  echo -e "${YELLOW}[*] Menghapus Node lama (Forced Purge) untuk menghindari konflik...\e[0m"
-  sudo rm -f /etc/apt/sources.list.d/nodesource.list < /dev/null
+  # Clean Node Swap (Nuclear Purge)
+  echo -e "${YELLOW}[*] Menghapus Node lama (Nuclear Purge) untuk menghindari konflik...\e[0m"
+  sudo rm -f /etc/apt/sources.list.d/nodesource* < /dev/null
+  sudo apt-get clean < /dev/null
+  sudo apt-get update < /dev/null
   sudo apt-get purge -y nodejs < /dev/null
   curl -sL https://deb.nodesource.com/setup_18.x < /dev/null | sudo -E bash - < /dev/null
   sudo apt install -y nodejs < /dev/null
@@ -243,7 +247,7 @@ elif [ "$SELECT_THEME" -eq 2 ]; then
   rm -rf node_modules yarn.lock < /dev/null
   
   yarn install --ignore-engines < /dev/null
-  yarn add react-feather --ignore-engines < /dev/null
+  yarn add react-feather md5 path-browserify --ignore-engines < /dev/null
   php artisan migrate < /dev/null
   export NODE_OPTIONS=--max-old-space-size=4096
   yarn build:production < /dev/null || { echo -e "${RED}ERROR: Build failed!${NC}"; exit 1; }
@@ -288,8 +292,11 @@ elif [ "$SELECT_THEME" -eq 3 ]; then
   PHP_VER=$(php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;")
   sudo apt-get install -y php$PHP_VER-bcmath php$PHP_VER-xml php$PHP_VER-mbstring php$PHP_VER-gd php$PHP_VER-curl php$PHP_VER-zip < /dev/null
   
-  # Clean Node Swap (Forced)
-  sudo rm -f /etc/apt/sources.list.d/nodesource.list < /dev/null
+  # Clean Node Swap (Nuclear Purge)
+  echo -e "${YELLOW}[*] Menghapus Node lama (Nuclear Purge) untuk menghindari konflik...\e[0m"
+  sudo rm -f /etc/apt/sources.list.d/nodesource* < /dev/null
+  sudo apt-get clean < /dev/null
+  sudo apt-get update < /dev/null
   sudo apt-get purge -y nodejs < /dev/null
   curl -sL https://deb.nodesource.com/setup_18.x < /dev/null | sudo -E bash - < /dev/null
   sudo apt install -y nodejs < /dev/null
@@ -305,7 +312,7 @@ elif [ "$SELECT_THEME" -eq 3 ]; then
   rm -rf node_modules yarn.lock < /dev/null
   
   yarn install --ignore-engines < /dev/null
-  yarn add react-feather --ignore-engines < /dev/null
+  yarn add react-feather md5 path-browserify --ignore-engines < /dev/null
   php artisan migrate < /dev/null
   export NODE_OPTIONS=--max-old-space-size=4096
   yarn build:production < /dev/null || { echo -e "${RED}ERROR: Build failed!${NC}"; exit 1; }
@@ -331,18 +338,11 @@ elif [ "$SELECT_THEME" -eq 4 ]; then
   echo -e "${BLUE}[+] =============================================== [+]${NC}"
   echo -e "                                                                   "
   
-  # === Arix: Jalankan core recovery dan Node setup ===
-  restore_base
-  curl -sL https://deb.nodesource.com/setup_18.x < /dev/null | sudo -E bash - < /dev/null
-  sudo apt install -y nodejs < /dev/null
-  sudo npm i -g yarn < /dev/null
-
-  # === Dependency Check & Version Sync (Arix) ===
-  PHP_VER=$(php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;")
-  sudo apt-get install -y php$PHP_VER-bcmath php$PHP_VER-xml php$PHP_VER-mbstring php$PHP_VER-gd php$PHP_VER-curl php$PHP_VER-zip < /dev/null
-  
-  # Clean Node Swap (Forced)
-  sudo rm -f /etc/apt/sources.list.d/nodesource.list < /dev/null
+  # Nuclear Node v18 Protection
+  echo -e "${YELLOW}[*] Menghapus Node lama (Nuclear Purge) untuk menghindari konflik...\e[0m"
+  sudo rm -f /etc/apt/sources.list.d/nodesource* < /dev/null
+  sudo apt-get clean < /dev/null
+  sudo apt-get update < /dev/null
   sudo apt-get purge -y nodejs < /dev/null
   curl -sL https://deb.nodesource.com/setup_18.x < /dev/null | sudo -E bash - < /dev/null
   sudo apt install -y nodejs < /dev/null
