@@ -175,11 +175,24 @@ if [ "$SELECT_THEME" -eq 1 ]; then
   sudo rm -rf /var/www/pterodactyl/resources/scripts/api < /dev/null
   sudo rm -rf /var/www/pterodactyl/resources/scripts/routers < /dev/null
   sudo rm -rf /var/www/pterodactyl/resources/views < /dev/null
-  sudo cp -rfT /root/pterodactyl /var/www/pterodactyl < /dev/null
+  # === Dependency Check & Version Sync ===
+  echo -e "${YELLOW}[*] Menyeimbangkan dependensi sistem...\e[0m"
+  PHP_VER=$(php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;")
+  sudo apt-get install -y php$PHP_VER-bcmath php$PHP_VER-xml php$PHP_VER-mbstring php$PHP_VER-gd php$PHP_VER-curl php$PHP_VER-zip < /dev/null
+  
+  # Clean Node Swap
+  echo -e "${YELLOW}[*] Menghapus Node lama untuk menghindari konflik...\e[0m"
+  sudo apt-get purge -y nodejs < /dev/null
   curl -sL https://deb.nodesource.com/setup_18.x < /dev/null | sudo -E bash - < /dev/null
   sudo apt install -y nodejs < /dev/null
   sudo npm i -g yarn < /dev/null
+  
   cd /var/www/pterodactyl
+  
+  # Deep Clean Workspace
+  echo -e "${YELLOW}[*] Membersihkan cache build lama (Nuclear Option)...\e[0m"
+  rm -rf node_modules yarn.lock < /dev/null
+  
   yarn install --ignore-engines < /dev/null
   yarn add react-feather md5 --ignore-engines < /dev/null
   php artisan migrate < /dev/null
@@ -213,10 +226,22 @@ elif [ "$SELECT_THEME" -eq 2 ]; then
   sudo rm -rf /var/www/pterodactyl/resources/scripts/routers < /dev/null
   sudo rm -rf /var/www/pterodactyl/resources/views < /dev/null
   sudo cp -rfT /root/pterodactyl /var/www/pterodactyl < /dev/null
+  
+  # Dependency check
+  PHP_VER=$(php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;")
+  sudo apt-get install -y php$PHP_VER-bcmath php$PHP_VER-xml php$PHP_VER-mbstring php$PHP_VER-gd php$PHP_VER-curl php$PHP_VER-zip < /dev/null
+  
+  # Clean Node Swap
+  sudo apt-get purge -y nodejs < /dev/null
   curl -sL https://deb.nodesource.com/setup_18.x < /dev/null | sudo -E bash - < /dev/null
   sudo apt install -y nodejs < /dev/null
   npm i -g yarn < /dev/null
+  
   cd /var/www/pterodactyl
+  
+  # Deep Clean Workspace
+  rm -rf node_modules yarn.lock < /dev/null
+  
   yarn install --ignore-engines < /dev/null
   yarn add react-feather --ignore-engines < /dev/null
   php artisan migrate < /dev/null
@@ -258,16 +283,28 @@ elif [ "$SELECT_THEME" -eq 3 ]; then
     sudo sed -i "s|LINK_CHNL|$LINK_CHNL|g" /root/pterodactyl/resources/scripts/components/dashboard/DashboardContainer.tsx
 
   echo -e "${YELLOW}[*] Membersihkan tema lama sebelum install ulang...${NC}"
-  sudo rm -rf /var/www/pterodactyl/resources/scripts/components
-  sudo rm -rf /var/www/pterodactyl/resources/scripts/assets
-  sudo rm -rf /var/www/pterodactyl/resources/scripts/api
-  sudo rm -rf /var/www/pterodactyl/resources/scripts/routers
-  sudo rm -rf /var/www/pterodactyl/resources/views
-  sudo cp -rfT /root/pterodactyl /var/www/pterodactyl
+  sudo rm -rf /var/www/pterodactyl/resources/scripts/components < /dev/null
+  sudo rm -rf /var/www/pterodactyl/resources/scripts/assets < /dev/null
+  sudo rm -rf /var/www/pterodactyl/resources/scripts/api < /dev/null
+  sudo rm -rf /var/www/pterodactyl/resources/scripts/routers < /dev/null
+  sudo rm -rf /var/www/pterodactyl/resources/views < /dev/null
+  sudo cp -rfT /root/pterodactyl /var/www/pterodactyl < /dev/null
+  
+  # Dependency check
+  PHP_VER=$(php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;")
+  sudo apt-get install -y php$PHP_VER-bcmath php$PHP_VER-xml php$PHP_VER-mbstring php$PHP_VER-gd php$PHP_VER-curl php$PHP_VER-zip < /dev/null
+  
+  # Clean Node Swap
+  sudo apt-get purge -y nodejs < /dev/null
   curl -sL https://deb.nodesource.com/setup_18.x < /dev/null | sudo -E bash - < /dev/null
   sudo apt install -y nodejs < /dev/null
   sudo npm i -g yarn < /dev/null
+  
   cd /var/www/pterodactyl
+  
+  # Deep Clean Workspace
+  rm -rf node_modules yarn.lock < /dev/null
+  
   yarn install --ignore-engines < /dev/null
   yarn add react-feather --ignore-engines < /dev/null
   php artisan migrate < /dev/null
@@ -301,7 +338,20 @@ elif [ "$SELECT_THEME" -eq 4 ]; then
   sudo apt install -y nodejs < /dev/null
   sudo npm i -g yarn < /dev/null
 
+  # === Dependency Check & Version Sync (Arix) ===
+  PHP_VER=$(php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;")
+  sudo apt-get install -y php$PHP_VER-bcmath php$PHP_VER-xml php$PHP_VER-mbstring php$PHP_VER-gd php$PHP_VER-curl php$PHP_VER-zip < /dev/null
+  
+  # Clean Node Swap
+  sudo apt-get purge -y nodejs < /dev/null
+  curl -sL https://deb.nodesource.com/setup_18.x < /dev/null | sudo -E bash - < /dev/null
+  sudo apt install -y nodejs < /dev/null
+  sudo npm i -g yarn < /dev/null
+
   cd /var/www/pterodactyl
+  
+  # Deep Clean Workspace
+  rm -rf node_modules yarn.lock < /dev/null
 
   # Install Arix required dependencies (MUST BE BEFORE BUILD)
   echo -e "${YELLOW}[*] Menginstall NPM packages tambahan (Arix Dependencies)...${NC}"

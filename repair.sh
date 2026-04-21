@@ -3,12 +3,20 @@ if (( $EUID != 0 )); then
     exit
 fi
 repairPanel(){
+    echo -e "\e[33m[*] Mendeteksi versi PHP...\e[0m"
+    PHP_VER=$(php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;")
+    echo -e "\e[32m[+] PHP $PHP_VER terdeteksi.\e[0m"
+    
+    echo -e "\e[33m[*] Menginstall extension PHP yang diperlukan ($PHP_VER)...\e[0m"
+    sudo apt-get update -y < /dev/null
+    sudo apt-get install -y php$PHP_VER-bcmath php$PHP_VER-xml php$PHP_VER-mbstring php$PHP_VER-gd php$PHP_VER-curl php$PHP_VER-zip < /dev/null
+
     cd /var/www/pterodactyl
 
     php artisan down
     sudo rm -rf /var/www/pterodactyl/resources
 
-    curl -L https://github.com/pterodactyl/panel/releases/latest/download/panel.tar.gz | tar -xzv
+    curl -L https://github.com/pterodactyl/panel/releases/latest/download/panel.tar.gz < /dev/null | tar -xzv < /dev/null
 
     chmod -R 755 storage/* bootstrap/cache
 
