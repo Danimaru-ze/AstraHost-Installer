@@ -125,7 +125,7 @@ install_theme() {
     read -r SELECT_THEME
     case "$SELECT_THEME" in
       1)
-        THEME_URL=$(echo -e "https://raw.githubusercontent.com/Danimaru-ze/AstraHost-Installer/main/C2.zip")
+        THEME_URL=$(echo -e "https://raw.githubusercontent.com/Danimaru-ze/AstraHost-Installer/main/StellarTheme.zip")
         THEME_FOLDER="pterodactyl"
         break
         ;;
