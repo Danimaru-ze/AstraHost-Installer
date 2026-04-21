@@ -16,7 +16,11 @@ repairPanel(){
     php artisan down
     sudo rm -rf /var/www/pterodactyl/resources
 
-    curl -L https://github.com/pterodactyl/panel/releases/latest/download/panel.tar.gz < /dev/null | tar -xzv < /dev/null
+    echo -e "\e[33m[*] Mendownload Pterodactyl Core (Stable Download)...\e[0m"
+    sudo wget -qO /root/panel.tar.gz https://github.com/pterodactyl/panel/releases/latest/download/panel.tar.gz < /dev/null
+
+    echo -e "\e[33m[*] Mengekstrak file (Smart Restoration)...\e[0m"
+    sudo tar -xzvf /root/panel.tar.gz -C /var/www/pterodactyl < /dev/null
 
     chmod -R 755 storage/* bootstrap/cache
 

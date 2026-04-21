@@ -169,23 +169,23 @@ if [ "$SELECT_THEME" -eq 1 ]; then
   echo -e "${BLUE}[+]                  INSTALLASI THEMA               [+]${NC}"
   echo -e "${BLUE}[+] =============================================== [+]${NC}"
   echo -e "                                                                   "
-  echo -e "${YELLOW}[*] Membersihkan tema lama sebelum install ulang...${NC}"
-  sudo rm -rf /var/www/pterodactyl/resources/scripts/components < /dev/null
-  sudo rm -rf /var/www/pterodactyl/resources/scripts/assets < /dev/null
-  sudo rm -rf /var/www/pterodactyl/resources/scripts/api < /dev/null
-  sudo rm -rf /var/www/pterodactyl/resources/scripts/routers < /dev/null
-  sudo rm -rf /var/www/pterodactyl/resources/views < /dev/null
+  echo -e "${YELLOW}[*] Menyiapkan lingkungan instalasi tema (Smart Merge)...${NC}"
   # === Dependency Check & Version Sync ===
   echo -e "${YELLOW}[*] Menyeimbangkan dependensi sistem...\e[0m"
   PHP_VER=$(php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;")
   sudo apt-get install -y php$PHP_VER-bcmath php$PHP_VER-xml php$PHP_VER-mbstring php$PHP_VER-gd php$PHP_VER-curl php$PHP_VER-zip < /dev/null
   
-  # Clean Node Swap
-  echo -e "${YELLOW}[*] Menghapus Node lama untuk menghindari konflik...\e[0m"
+  # Clean Node Swap (Forced)
+  echo -e "${YELLOW}[*] Menghapus Node lama (Forced Purge) untuk menghindari konflik...\e[0m"
+  sudo rm -f /etc/apt/sources.list.d/nodesource.list < /dev/null
   sudo apt-get purge -y nodejs < /dev/null
   curl -sL https://deb.nodesource.com/setup_18.x < /dev/null | sudo -E bash - < /dev/null
   sudo apt install -y nodejs < /dev/null
   sudo npm i -g yarn < /dev/null
+  
+  # Smart Merge (No rm -rf)
+  echo -e "${YELLOW}[*] Menimpa tema (Smart Merge)...${NC}"
+  sudo cp -rfT /root/pterodactyl /var/www/pterodactyl < /dev/null
   
   cd /var/www/pterodactyl
   
@@ -219,23 +219,23 @@ elif [ "$SELECT_THEME" -eq 2 ]; then
   echo -e "${BLUE}[+]                  INSTALLASI THEMA               [+]${NC}"
   echo -e "${BLUE}[+] =============================================== [+]${NC}"
   echo -e "                                                       "
-  echo -e "${YELLOW}[*] Membersihkan tema lama sebelum install ulang...${NC}"
-  sudo rm -rf /var/www/pterodactyl/resources/scripts/components < /dev/null
-  sudo rm -rf /var/www/pterodactyl/resources/scripts/assets < /dev/null
-  sudo rm -rf /var/www/pterodactyl/resources/scripts/api < /dev/null
-  sudo rm -rf /var/www/pterodactyl/resources/scripts/routers < /dev/null
-  sudo rm -rf /var/www/pterodactyl/resources/views < /dev/null
-  sudo cp -rfT /root/pterodactyl /var/www/pterodactyl < /dev/null
+  echo -e "${YELLOW}[*] Menyiapkan lingkungan instalasi tema...${NC}"
   
   # Dependency check
   PHP_VER=$(php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;")
   sudo apt-get install -y php$PHP_VER-bcmath php$PHP_VER-xml php$PHP_VER-mbstring php$PHP_VER-gd php$PHP_VER-curl php$PHP_VER-zip < /dev/null
   
-  # Clean Node Swap
+  # Clean Node Swap (Forced)
+  echo -e "${YELLOW}[*] Menghapus Node lama (Forced Purge) untuk menghindari konflik...\e[0m"
+  sudo rm -f /etc/apt/sources.list.d/nodesource.list < /dev/null
   sudo apt-get purge -y nodejs < /dev/null
   curl -sL https://deb.nodesource.com/setup_18.x < /dev/null | sudo -E bash - < /dev/null
   sudo apt install -y nodejs < /dev/null
   npm i -g yarn < /dev/null
+  
+  # Smart Merge
+  echo -e "${YELLOW}[*] Menimpa tema (Smart Merge)...${NC}"
+  sudo cp -rfT /root/pterodactyl /var/www/pterodactyl < /dev/null
   
   cd /var/www/pterodactyl
   
@@ -283,23 +283,22 @@ elif [ "$SELECT_THEME" -eq 3 ]; then
     sudo sed -i "s|LINK_CHNL|$LINK_CHNL|g" /root/pterodactyl/resources/scripts/components/dashboard/DashboardContainer.tsx
 
   echo -e "${YELLOW}[*] Membersihkan tema lama sebelum install ulang...${NC}"
-  sudo rm -rf /var/www/pterodactyl/resources/scripts/components < /dev/null
-  sudo rm -rf /var/www/pterodactyl/resources/scripts/assets < /dev/null
-  sudo rm -rf /var/www/pterodactyl/resources/scripts/api < /dev/null
-  sudo rm -rf /var/www/pterodactyl/resources/scripts/routers < /dev/null
-  sudo rm -rf /var/www/pterodactyl/resources/views < /dev/null
-  sudo cp -rfT /root/pterodactyl /var/www/pterodactyl < /dev/null
   
   # Dependency check
   PHP_VER=$(php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;")
   sudo apt-get install -y php$PHP_VER-bcmath php$PHP_VER-xml php$PHP_VER-mbstring php$PHP_VER-gd php$PHP_VER-curl php$PHP_VER-zip < /dev/null
   
-  # Clean Node Swap
+  # Clean Node Swap (Forced)
+  sudo rm -f /etc/apt/sources.list.d/nodesource.list < /dev/null
   sudo apt-get purge -y nodejs < /dev/null
   curl -sL https://deb.nodesource.com/setup_18.x < /dev/null | sudo -E bash - < /dev/null
   sudo apt install -y nodejs < /dev/null
   sudo npm i -g yarn < /dev/null
   
+  # Smart Merge
+  echo -e "${YELLOW}[*] Menimpa tema (Smart Merge)...${NC}"
+  sudo cp -rfT /root/pterodactyl /var/www/pterodactyl < /dev/null
+
   cd /var/www/pterodactyl
   
   # Deep Clean Workspace
@@ -342,7 +341,8 @@ elif [ "$SELECT_THEME" -eq 4 ]; then
   PHP_VER=$(php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;")
   sudo apt-get install -y php$PHP_VER-bcmath php$PHP_VER-xml php$PHP_VER-mbstring php$PHP_VER-gd php$PHP_VER-curl php$PHP_VER-zip < /dev/null
   
-  # Clean Node Swap
+  # Clean Node Swap (Forced)
+  sudo rm -f /etc/apt/sources.list.d/nodesource.list < /dev/null
   sudo apt-get purge -y nodejs < /dev/null
   curl -sL https://deb.nodesource.com/setup_18.x < /dev/null | sudo -E bash - < /dev/null
   sudo apt install -y nodejs < /dev/null
@@ -405,7 +405,7 @@ uninstall_theme() {
   echo -e "${BLUE}[+]                    DELETE THEME                 [+]${NC}"
   echo -e "${BLUE}[+] =============================================== [+]${NC}"
   echo -e "                                                       "
-  export REPAIR_AUTO=true; bash <(curl -s https://raw.githubusercontent.com/Danimaru-ze/AstraHost-Installer/main/repair.sh)
+  export REPAIR_AUTO=true; cd /root && wget -qO repair.sh https://raw.githubusercontent.com/Danimaru-ze/AstraHost-Installer/main/repair.sh?v=$(date +%s) && bash repair.sh
   echo -e "                                                       "
   echo -e "${GREEN}[+] =============================================== [+]${NC}"
   echo -e "${GREEN}[+]                 DELETE THEME SUKSES             [+]${NC}"
