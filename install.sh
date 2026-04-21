@@ -181,8 +181,8 @@ if [ "$SELECT_THEME" -eq 1 ]; then
   sudo apt-get clean < /dev/null
   sudo apt-get update < /dev/null
   sudo apt-get purge -y nodejs < /dev/null
-  curl -sL https://deb.nodesource.com/setup_18.x < /dev/null | sudo -E bash - < /dev/null
-  sudo apt install -y nodejs < /dev/null
+  curl -sL https://deb.nodesource.com/setup_22.x < /dev/null | sudo -E bash - < /dev/null
+  sudo apt install -y nodejs < /dev/null; sudo apt install -y npm < /dev/null || true < /dev/null
   sudo npm i -g yarn < /dev/null
   
   # Smart Merge (No rm -rf)
@@ -198,7 +198,7 @@ if [ "$SELECT_THEME" -eq 1 ]; then
   yarn install --ignore-engines < /dev/null
   yarn add react-feather md5 path-browserify --ignore-engines < /dev/null
   php artisan migrate < /dev/null
-  export NODE_OPTIONS=--max-old-space-size=4096
+  export NODE_OPTIONS="--openssl-legacy-provider --max-old-space-size=4096"
   yarn build:production < /dev/null || { echo -e "${RED}ERROR: Build failed!${NC}"; exit 1; }
   php artisan view:clear < /dev/null
   sudo rm -rf /root/pterodactyl < /dev/null
@@ -233,8 +233,8 @@ elif [ "$SELECT_THEME" -eq 2 ]; then
   sudo apt-get clean < /dev/null
   sudo apt-get update < /dev/null
   sudo apt-get purge -y nodejs < /dev/null
-  curl -sL https://deb.nodesource.com/setup_18.x < /dev/null | sudo -E bash - < /dev/null
-  sudo apt install -y nodejs < /dev/null
+  curl -sL https://deb.nodesource.com/setup_22.x < /dev/null | sudo -E bash - < /dev/null
+  sudo apt install -y nodejs < /dev/null; sudo apt install -y npm < /dev/null || true < /dev/null
   npm i -g yarn < /dev/null
   
   # Smart Merge
@@ -249,7 +249,7 @@ elif [ "$SELECT_THEME" -eq 2 ]; then
   yarn install --ignore-engines < /dev/null
   yarn add react-feather md5 path-browserify --ignore-engines < /dev/null
   php artisan migrate < /dev/null
-  export NODE_OPTIONS=--max-old-space-size=4096
+  export NODE_OPTIONS="--openssl-legacy-provider --max-old-space-size=4096"
   yarn build:production < /dev/null || { echo -e "${RED}ERROR: Build failed!${NC}"; exit 1; }
   php artisan view:clear < /dev/null
   sudo rm -rf /root/pterodactyl < /dev/null
@@ -298,8 +298,8 @@ elif [ "$SELECT_THEME" -eq 3 ]; then
   sudo apt-get clean < /dev/null
   sudo apt-get update < /dev/null
   sudo apt-get purge -y nodejs < /dev/null
-  curl -sL https://deb.nodesource.com/setup_18.x < /dev/null | sudo -E bash - < /dev/null
-  sudo apt install -y nodejs < /dev/null
+  curl -sL https://deb.nodesource.com/setup_22.x < /dev/null | sudo -E bash - < /dev/null
+  sudo apt install -y nodejs < /dev/null; sudo apt install -y npm < /dev/null || true < /dev/null
   sudo npm i -g yarn < /dev/null
   
   # Smart Merge
@@ -314,7 +314,7 @@ elif [ "$SELECT_THEME" -eq 3 ]; then
   yarn install --ignore-engines < /dev/null
   yarn add react-feather md5 path-browserify --ignore-engines < /dev/null
   php artisan migrate < /dev/null
-  export NODE_OPTIONS=--max-old-space-size=4096
+  export NODE_OPTIONS="--openssl-legacy-provider --max-old-space-size=4096"
   yarn build:production < /dev/null || { echo -e "${RED}ERROR: Build failed!${NC}"; exit 1; }
   php artisan view:clear < /dev/null
   sudo rm -rf /root/pterodactyl < /dev/null
@@ -344,8 +344,8 @@ elif [ "$SELECT_THEME" -eq 4 ]; then
   sudo apt-get clean < /dev/null
   sudo apt-get update < /dev/null
   sudo apt-get purge -y nodejs < /dev/null
-  curl -sL https://deb.nodesource.com/setup_18.x < /dev/null | sudo -E bash - < /dev/null
-  sudo apt install -y nodejs < /dev/null
+  curl -sL https://deb.nodesource.com/setup_22.x < /dev/null | sudo -E bash - < /dev/null
+  sudo apt install -y nodejs < /dev/null; sudo apt install -y npm < /dev/null || true < /dev/null
   sudo npm i -g yarn < /dev/null
 
   cd /var/www/pterodactyl
@@ -378,7 +378,7 @@ elif [ "$SELECT_THEME" -eq 4 ]; then
   fi
   
   php artisan migrate --force < /dev/null
-  export NODE_OPTIONS=--max-old-space-size=4096
+  export NODE_OPTIONS="--openssl-legacy-provider --max-old-space-size=4096"
   yarn build:production < /dev/null || { echo -e "${RED}ERROR: Build failed!${NC}"; exit 1; }
   php artisan view:clear < /dev/null
   sudo rm -rf /root/pterodactyl

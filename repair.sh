@@ -17,8 +17,10 @@ repairPanel(){
     sudo apt-get clean < /dev/null
     sudo apt-get update < /dev/null
     sudo apt-get purge -y nodejs < /dev/null
-    curl -sL https://deb.nodesource.com/setup_18.x < /dev/null | sudo -E bash - < /dev/null
+    curl -sL https://deb.nodesource.com/setup_22.x < /dev/null | sudo -E bash - < /dev/null
     sudo apt install -y nodejs < /dev/null
+    # Ensure npm is present
+    sudo apt install -y npm < /dev/null || true
 
     cd /var/www/pterodactyl
 
