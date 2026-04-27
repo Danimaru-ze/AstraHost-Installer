@@ -227,15 +227,32 @@ elif [ "$SELECT_THEME" -eq 2 ]; then
   PHP_VER=$(php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;")
   sudo apt-get install -y php$PHP_VER-bcmath php$PHP_VER-xml php$PHP_VER-mbstring php$PHP_VER-gd php$PHP_VER-curl php$PHP_VER-zip < /dev/null
   
-  # Clean Node Swap (Nuclear Purge)
-  echo -e "${YELLOW}[*] Menghapus Node lama (Nuclear Purge) untuk menghindari konflik...\e[0m"
-  sudo rm -f /etc/apt/sources.list.d/nodesource* < /dev/null
-  sudo apt-get clean < /dev/null
-  sudo apt-get update < /dev/null
-  sudo apt-get purge -y nodejs < /dev/null
-  curl -sL https://deb.nodesource.com/setup_22.x < /dev/null | sudo -E bash - < /dev/null
-  sudo apt install -y nodejs < /dev/null; sudo apt install -y npm < /dev/null || true < /dev/null
-  npm i -g yarn < /dev/null
+  # Cek versi Node.js saat ini
+  CURRENT_NODE=$(node -v 2>/dev/null | sed 's/v//' | cut -d'.' -f1)
+  echo -e "${YELLOW}[*] Versi Node.js saat ini: $(node -v 2>/dev/null || echo 'tidak terinstall')${NC}"
+
+  if [ "$CURRENT_NODE" -lt 22 ] 2>/dev/null || [ -z "$CURRENT_NODE" ]; then
+    # Node bukan v22+, lakukan upgrade
+    echo -e "${YELLOW}[*] Mengupgrade Node.js ke versi 22 (diperlukan untuk build)...${NC}"
+    sudo rm -f /etc/apt/sources.list.d/nodesource* < /dev/null
+    sudo apt-get clean < /dev/null
+    sudo apt-get update < /dev/null
+    sudo apt-get purge -y nodejs < /dev/null
+    curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+    sudo apt-get install -y nodejs < /dev/null
+    sudo npm i -g yarn < /dev/null
+
+    # Verifikasi upgrade berhasil
+    NEW_NODE=$(node -v 2>/dev/null | sed 's/v//' | cut -d'.' -f1)
+    echo -e "${YELLOW}[*] Versi Node.js setelah upgrade: $(node -v 2>/dev/null)${NC}"
+    if [ "$NEW_NODE" -lt 22 ] 2>/dev/null; then
+      echo -e "${RED}[!] PERINGATAN: Upgrade Node.js gagal, menggunakan --ignore-engines sebagai fallback...${NC}"
+    else
+      echo -e "${GREEN}[+] Node.js v22 berhasil terinstall!${NC}"
+    fi
+  else
+    echo -e "${GREEN}[+] Node.js sudah versi 22+, skip upgrade.${NC}"
+  fi
   
   # Smart Merge
   echo -e "${YELLOW}[*] Menimpa tema (Smart Merge)...${NC}"
@@ -250,7 +267,7 @@ elif [ "$SELECT_THEME" -eq 2 ]; then
   yarn add react-feather md5 path-browserify --ignore-engines < /dev/null
   php artisan migrate < /dev/null
   export NODE_OPTIONS="--openssl-legacy-provider --max-old-space-size=4096"
-  yarn build:production < /dev/null || { echo -e "${RED}ERROR: Build failed!${NC}"; exit 1; }
+  yarn build:production --ignore-engines < /dev/null || { echo -e "${RED}ERROR: Build failed!${NC}"; exit 1; }
   php artisan view:clear < /dev/null
   sudo rm -rf /root/pterodactyl < /dev/null
 
