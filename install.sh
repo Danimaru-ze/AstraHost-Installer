@@ -333,13 +333,150 @@ const Icon = ({ icon, className, style }: Props) => {
 export default Icon;
 ICONEOF
 
+  # Buat CopyOnClick.tsx yang hilang dari tema Noobee
+  echo -e "${YELLOW}[*] Membuat file CopyOnClick.tsx yang hilang...${NC}"
+  cat > /var/www/pterodactyl/resources/scripts/components/elements/CopyOnClick.tsx << 'COPYEOF'
+import React, { useEffect, useState } from 'react';
+import Fade from '@/components/elements/Fade';
+import Portal from '@/components/elements/Portal';
+import copy from 'copy-to-clipboard';
+import classNames from 'classnames';
+
+interface CopyOnClickProps {
+    text: string | number | null | undefined;
+    showInNotification?: boolean;
+    children: React.ReactNode;
+}
+
+const CopyOnClick = ({ text, showInNotification = true, children }: CopyOnClickProps) => {
+    const [copied, setCopied] = useState(false);
+
+    useEffect(() => {
+        if (!copied) return;
+
+        const timeout = setTimeout(() => {
+            setCopied(false);
+        }, 2500);
+
+        return () => {
+            clearTimeout(timeout);
+        };
+    }, [copied]);
+
+    if (!React.isValidElement(children)) {
+        throw new Error('Component passed to <CopyOnClick/> must be a valid React element.');
+    }
+
+    const child = !text
+        ? React.Children.only(children)
+        : React.cloneElement(React.Children.only(children), {
+              className: classNames(children.props.className || '', 'cursor-pointer'),
+              onClick: (e: React.MouseEvent<HTMLElement>) => {
+                  copy(String(text));
+                  setCopied(true);
+                  if (typeof children.props.onClick === 'function') {
+                      children.props.onClick(e);
+                  }
+              },
+          });
+
+    return (
+        <>
+            {copied && (
+                <Portal>
+                    <Fade in appear timeout={250} key={copied ? 'visible' : 'invisible'}>
+                        <div className={'fixed z-50 bottom-0 right-0 m-4'}>
+                            <div className={'rounded-md py-3 px-4 text-gray-200 bg-neutral-600/95 shadow'}>
+                                <p>
+                                    {showInNotification
+                                        ? `Copied "${String(text)}" to clipboard.`
+                                        : 'Copied text to clipboard.'}
+                                </p>
+                            </div>
+                        </div>
+                    </Fade>
+                </Portal>
+            )}
+            {child}
+        </>
+    );
+};
+
+export default CopyOnClick;
+COPYEOF
+
+  # Buat Fade.tsx yang hilang dari tema Noobee
+  echo -e "${YELLOW}[*] Membuat file Fade.tsx yang hilang...${NC}"
+  cat > /var/www/pterodactyl/resources/scripts/components/elements/Fade.tsx << 'FADEEOF'
+import React from 'react';
+import tw from 'twin.macro';
+import styled from 'styled-components/macro';
+import CSSTransition, { CSSTransitionProps } from 'react-transition-group/CSSTransition';
+
+interface Props extends Omit<CSSTransitionProps, 'timeout' | 'classNames'> {
+    timeout: number;
+}
+
+const Container = styled.div<{ timeout: number }>`
+    .fade-enter,
+    .fade-exit,
+    .fade-appear {
+        will-change: opacity;
+    }
+
+    .fade-enter,
+    .fade-appear {
+        ${tw`opacity-0`};
+
+        &.fade-enter-active,
+        &.fade-appear-active {
+            ${tw`opacity-100 transition-opacity ease-in`};
+            transition-duration: ${(props) => props.timeout}ms;
+        }
+    }
+
+    .fade-exit {
+        ${tw`opacity-100`};
+
+        &.fade-exit-active {
+            ${tw`opacity-0 transition-opacity ease-in`};
+            transition-duration: ${(props) => props.timeout}ms;
+        }
+    }
+`;
+
+const Fade: React.FC<Props> = ({ timeout, children, ...props }) => (
+    <Container timeout={timeout}>
+        <CSSTransition timeout={timeout} classNames={'fade'} {...props}>
+            {children}
+        </CSSTransition>
+    </Container>
+);
+Fade.displayName = 'Fade';
+
+export default Fade;
+FADEEOF
+
+  # Buat Portal.tsx yang hilang dari tema Noobee
+  echo -e "${YELLOW}[*] Membuat file Portal.tsx yang hilang...${NC}"
+  cat > /var/www/pterodactyl/resources/scripts/components/elements/Portal.tsx << 'PORTALEOF'
+import React, { useRef } from 'react';
+import { createPortal } from 'react-dom';
+
+export default ({ children }: { children: React.ReactNode }) => {
+    const element = useRef(document.getElementById('modal-portal'));
+
+    return createPortal(children, element!.current!);
+};
+PORTALEOF
+
   cd /var/www/pterodactyl
 
   # Deep Clean Workspace
   rm -rf node_modules yarn.lock < /dev/null
   
   yarn install --ignore-engines < /dev/null
-  yarn add react-feather md5 path-browserify @tailwindcss/line-clamp @tailwindcss/forms use-fit-text boring-avatars --ignore-engines < /dev/null
+  yarn add react-feather md5 path-browserify @tailwindcss/line-clamp @tailwindcss/forms use-fit-text boring-avatars copy-to-clipboard --ignore-engines < /dev/null
   php artisan migrate --force < /dev/null
   export NODE_OPTIONS="--openssl-legacy-provider --max-old-space-size=4096"
   yarn build:production < /dev/null || { echo -e "${RED}ERROR: Build failed!${NC}"; exit 1; }
