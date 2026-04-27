@@ -264,7 +264,7 @@ elif [ "$SELECT_THEME" -eq 2 ]; then
   rm -rf node_modules yarn.lock < /dev/null
   
   yarn install --ignore-engines < /dev/null
-  yarn add react-feather md5 path-browserify --ignore-engines < /dev/null
+  yarn add react-feather md5 path-browserify @tailwindcss/line-clamp @tailwindcss/forms --ignore-engines < /dev/null
   php artisan migrate --force < /dev/null
   export NODE_OPTIONS="--openssl-legacy-provider --max-old-space-size=4096"
   yarn build:production < /dev/null || { echo -e "${RED}ERROR: Build failed!${NC}"; exit 1; }
