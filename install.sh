@@ -265,10 +265,18 @@ elif [ "$SELECT_THEME" -eq 2 ]; then
   
   yarn install --ignore-engines < /dev/null
   yarn add react-feather md5 path-browserify --ignore-engines < /dev/null
-  php artisan migrate < /dev/null
+  php artisan migrate --force < /dev/null
   export NODE_OPTIONS="--openssl-legacy-provider --max-old-space-size=4096"
   yarn build:production < /dev/null || { echo -e "${RED}ERROR: Build failed!${NC}"; exit 1; }
   php artisan view:clear < /dev/null
+  php artisan config:clear < /dev/null
+  php artisan config:cache < /dev/null
+  php artisan route:clear < /dev/null
+  php artisan optimize < /dev/null
+  php artisan queue:restart < /dev/null
+  echo -e "${YELLOW}[*] Set permissions...${NC}"
+  sudo chown -R www-data:www-data /var/www/pterodactyl < /dev/null
+  sudo chmod -R 755 /var/www/pterodactyl/storage /var/www/pterodactyl/bootstrap/cache < /dev/null
   sudo rm -rf /root/pterodactyl < /dev/null
 
   echo -e "                                                       "
