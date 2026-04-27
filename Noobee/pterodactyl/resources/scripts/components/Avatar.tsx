@@ -1,52 +1,36 @@
 import React from 'react';
 import { useStoreState } from 'easy-peasy';
 import { ApplicationStore } from '@/state';
-import md5 from 'md5';
+import tw from 'twin.macro';
+import styled from 'styled-components/macro';
 
-type AvatarProps = {
-    size?: number;
-};
-
-const _Avatar = ({ size = 48 }: AvatarProps) => {
-    const email = useStoreState((state: ApplicationStore) => state.user.data!.email);
-    const hash = md5(email.trim().toLowerCase());
-    const url = `https://www.gravatar.com/avatar/${hash}?s=${size}&d=identicon`;
-
-    return (
-        <div
-            style={{
-                width: size,
-                height: size,
-                background: `url("${url}") center/cover no-repeat`,
-                borderRadius: '50%',
-            }}
-        />
-    );
-};
+const AvatarBox = styled.div`
+    ${tw`flex items-center justify-center rounded-full bg-blue-600 text-white font-bold`}
+    user-select: none;
+    font-size: 0.7rem;
+    width: 100%;
+    height: 100%;
+`;
 
 const _UserAvatar = () => {
     const email = useStoreState((state: ApplicationStore) => state.user.data!.email);
-    const hash = md5(email.trim().toLowerCase());
-    const url = `https://www.gravatar.com/avatar/${hash}?s=64&d=identicon`;
+    const letter = email ? email.charAt(0).toUpperCase() : '?';
+    return <AvatarBox>{letter}</AvatarBox>;
+};
 
+const _Avatar = ({ size = 48 }: { size?: number }) => {
+    const email = useStoreState((state: ApplicationStore) => state.user.data!.email);
+    const letter = email ? email.charAt(0).toUpperCase() : '?';
     return (
-        <div
-            className={'userAvatar'}
-            style={{
-                background: `url("${url}") center/cover no-repeat`,
-                width: '100%',
-                height: '100%',
-                borderRadius: '50%',
-            }}
-        />
+        <AvatarBox style={{ width: size, height: size }}>
+            {letter}
+        </AvatarBox>
     );
 };
 
 _Avatar.displayName = 'Avatar';
 _UserAvatar.displayName = 'Avatar.User';
 
-const Avatar = Object.assign(_Avatar, {
-    User: _UserAvatar,
-});
+const Avatar = Object.assign(_Avatar, { User: _UserAvatar });
 
 export default Avatar;
